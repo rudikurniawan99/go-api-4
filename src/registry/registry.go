@@ -14,4 +14,10 @@ func Registry(s *gin.Engine, db *gorm.DB) {
 	userDelivery := delivery.NewUserDelivery(userUsecase)
 	authGroup := s.Group("auth")
 	userDelivery.Mount(authGroup)
+
+	productRepository := repository.NewProductRepository(db)
+	productUsecase := usecase.NewProductUsecase(productRepository)
+	productDelivery := delivery.NewProductDelivery(productUsecase)
+	productGroup := s.Group("products")
+	productDelivery.Mount(productGroup)
 }
