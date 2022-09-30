@@ -21,11 +21,11 @@ func NewUserDelivery(u usecase.UserUsecase) UserDelivery {
 }
 
 func (d *userDelivery) Mount(group *gin.RouterGroup) {
-	group.POST("register", d.CreateUserHandler)
+	group.POST("register", d.RegisterHandler)
 	group.GET("login", d.LoginHandler)
 }
 
-func (d *userDelivery) CreateUserHandler(c *gin.Context) {
+func (d *userDelivery) RegisterHandler(c *gin.Context) {
 	req := &model.UserRequest{}
 	c.Bind(req)
 
