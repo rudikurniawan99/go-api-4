@@ -21,7 +21,16 @@ func NewUserDelivery(u usecase.UserUsecase) UserDelivery {
 }
 
 func (d *userDelivery) Mount(group *gin.RouterGroup) {
-	group.POST("/register", d.CreateUserHandler)
+	group.POST("register", d.CreateUserHandler)
+	group.GET("login", d.LoginHandler)
+	group.GET("body", d.bodyTestHandler)
+}
+
+func (d *userDelivery) bodyTestHandler(c *gin.Context) {
+	req := &model.UserRequest{}
+	c.BindJSON(req)
+
+	response.JsonSuccess(c, 200, req)
 }
 
 func (d *userDelivery) CreateUserHandler(c *gin.Context) {
@@ -36,18 +45,33 @@ func (d *userDelivery) CreateUserHandler(c *gin.Context) {
 	}
 
 	if err := d.u.CreateUser(user); err != nil {
-		c.JSON(400, response.ErrorResponse{
-			Code:    400,
-			Message: "failed to create user",
-			Error:   err,
-		})
-
+		response.JsonFailed(c, 400, err)
 		return
 	}
 
-	c.JSON(201, response.SuccessResponse{
-		Code:    201,
-		Message: "success to create user",
-		Data:    user,
-	})
+	response.JsonSuccess(c, 201, user)
+}
+
+func (d *userDelivery) LoginHandler(c *gin.Context) {
+	req := &model.UserRequest{}
+	err := c.BindJSON(req)
+
+	if err != nil {
+		response.JsonFailed(c, 400, err)
+		return
+	}
+
+	user := &model.User{}
+
+	if err := d.u.FindByEmail(user, req.Email); err != nil {
+		response.JsonErrorWithMessage(c, 404, "email not found", err)
+		return
+	}
+
+	if err := d.u.ComparePassword(req.Password, user.Password); err != nil {
+		response.JsonErrorWithMessage(c, 400, "password not match", err)
+		return
+	}
+
+	response.JsonSuccess(c, 200, user)
 }

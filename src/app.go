@@ -1,7 +1,6 @@
 package src
 
 import (
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/rudikurniawan99/go-api-4/config/db"
 	"github.com/rudikurniawan99/go-api-4/src/registry"
@@ -24,11 +23,11 @@ func InitServer() *server {
 }
 
 func (s *server) Run() {
-	s.httpServer.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"PUT", "GET"},
-		AllowCredentials: true,
-	}))
+	// s.httpServer.Use(cors.New(cors.Config{
+	// 	AllowOrigins:     []string{"*"},
+	// 	AllowMethods:     []string{"PUT", "GET"},
+	// 	AllowCredentials: true,
+	// }))
 
 	registry.Registry(s.httpServer, s.database)
 
