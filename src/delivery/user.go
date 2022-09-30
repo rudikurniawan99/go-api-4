@@ -23,14 +23,6 @@ func NewUserDelivery(u usecase.UserUsecase) UserDelivery {
 func (d *userDelivery) Mount(group *gin.RouterGroup) {
 	group.POST("register", d.CreateUserHandler)
 	group.GET("login", d.LoginHandler)
-	group.GET("body", d.bodyTestHandler)
-}
-
-func (d *userDelivery) bodyTestHandler(c *gin.Context) {
-	req := &model.UserRequest{}
-	c.BindJSON(req)
-
-	response.JsonSuccess(c, 200, req)
 }
 
 func (d *userDelivery) CreateUserHandler(c *gin.Context) {
