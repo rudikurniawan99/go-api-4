@@ -20,7 +20,7 @@ func GenerateToken(id int) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	signedToken, err := token.SignedString(os.Getenv("SECRET_KEY"))
+	signedToken, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 
 	if err != nil {
 		return "", err
@@ -34,7 +34,8 @@ func ValidateToken(signedToken string) (string, error) {
 		signedToken,
 		&jwtClaims{},
 		func(t *jwt.Token) (interface{}, error) {
-			return []byte(os.Getenv("SECRET_KEY")), nil
+			// return []byte(os.Getenv("SECRET_KEY")), nil
+			return t, nil
 		},
 	)
 

@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/rudikurniawan99/go-api-4/src/helper"
 	"github.com/rudikurniawan99/go-api-4/src/model"
 	"github.com/rudikurniawan99/go-api-4/src/response"
 	"github.com/rudikurniawan99/go-api-4/src/usecase"
@@ -66,7 +67,18 @@ func (d *userDelivery) LoginHandler(c *gin.Context) {
 		return
 	}
 
-	response.JsonSuccess(c, 200, user)
+	token, err := helper.GenerateToken(int(user.ID))
+
+	if err != nil {
+		response.JsonErrorWithMessage(c, 400, "failed generate token", err)
+	} else {
+		response.JsonSuccess(c, 200, gin.H{
+			"token": token,
+		})
+	}
+
+	// response.JsonSuccess(c, 200, user)
+
 }
 
 func (d *userDelivery) getMeHandler(c *gin.Context) {
