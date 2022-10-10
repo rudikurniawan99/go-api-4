@@ -22,7 +22,7 @@ func InitGorm() *gorm.DB {
 		log.Println("success to connect to db")
 		log.Println("===")
 	}
-	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.User{}, &model.Product{})
 
 	return db
 }

@@ -23,6 +23,7 @@ func NewUserDelivery(u usecase.UserUsecase) UserDelivery {
 func (d *userDelivery) Mount(group *gin.RouterGroup) {
 	group.POST("register", d.RegisterHandler)
 	group.GET("login", d.LoginHandler)
+	group.GET("me", d.getMeHandler)
 }
 
 func (d *userDelivery) RegisterHandler(c *gin.Context) {
@@ -66,4 +67,8 @@ func (d *userDelivery) LoginHandler(c *gin.Context) {
 	}
 
 	response.JsonSuccess(c, 200, user)
+}
+
+func (d *userDelivery) getMeHandler(c *gin.Context) {
+
 }

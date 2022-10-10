@@ -7,6 +7,8 @@ type (
 		gorm.Model
 		Name     string `json:"name" type:"varchar(40)"`
 		AuthorID uint   `json:"author_id"`
+		Stock    int16  `json:"stock"`
+		User     User   `gorm:"foreignKey:AuthorID"`
 	}
 
 	ProductRequest struct {
