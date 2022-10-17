@@ -12,6 +12,7 @@ type userRepository struct {
 type UserRepository interface {
 	Create(user *model.User) error
 	FindByEmail(user *model.User, email string) error
+	FIndById(user *model.User, id int) error
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
@@ -31,5 +32,12 @@ func (r *userRepository) FindByEmail(user *model.User, email string) error {
 		return err
 	}
 
+	return nil
+}
+
+func (r *userRepository) FIndById(user *model.User, id int) error {
+	if err := r.db.First(user, id).Error; err != nil {
+		return err
+	}
 	return nil
 }

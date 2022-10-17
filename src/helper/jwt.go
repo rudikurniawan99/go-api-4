@@ -34,8 +34,7 @@ func ValidateToken(signedToken string) (string, error) {
 		signedToken,
 		&jwtClaims{},
 		func(t *jwt.Token) (interface{}, error) {
-			// return []byte(os.Getenv("SECRET_KEY")), nil
-			return t, nil
+			return []byte(os.Getenv("SECRET_KEY")), nil
 		},
 	)
 

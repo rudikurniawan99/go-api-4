@@ -13,6 +13,7 @@ type userUsecase struct {
 type UserUsecase interface {
 	CreateUser(user *model.User) error
 	FindByEmail(user *model.User, email string) error
+	FindById(user *model.User, id int) error
 	ComparePassword(password, hash string) error
 }
 
@@ -40,6 +41,13 @@ func (u *userUsecase) FindByEmail(user *model.User, email string) error {
 
 func (u *userUsecase) ComparePassword(password, hash string) error {
 	if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)); err != nil {
+		return err
+	}
+
+	return nil
+}
+func (u *userUsecase) FindById(user *model.User, id int) error {
+	if err := u.r.FIndById(user, id); err != nil {
 		return err
 	}
 

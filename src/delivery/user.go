@@ -1,6 +1,8 @@
 package delivery
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/rudikurniawan99/go-api-4/src/helper"
 	"github.com/rudikurniawan99/go-api-4/src/model"
@@ -72,6 +74,9 @@ func (d *userDelivery) LoginHandler(c *gin.Context) {
 	if err != nil {
 		response.JsonErrorWithMessage(c, 400, "failed generate token", err)
 	} else {
+
+		c.Header("token", token)
+
 		response.JsonSuccess(c, 200, gin.H{
 			"token": token,
 		})
@@ -82,5 +87,37 @@ func (d *userDelivery) LoginHandler(c *gin.Context) {
 }
 
 func (d *userDelivery) getMeHandler(c *gin.Context) {
+	headerToken := c.GetHeader("token")
+	id, errVal := helper.ValidateToken(headerToken)
+	if errVal != nil {
+		response.JsonErrorWithMessage(
+			c,
+			400,
+			"err jwt",
+			errVal,
+		)
+		return
+	}
+
+	user := &model.User{}
+	ID, _ := strconv.Atoi(id)
+
+	if err := d.u.FindById(user, ID); err != nil {
+		response.JsonErrorWithMessage(
+			c,
+			404,
+			"user not found",
+			err,
+		)
+		return
+	}
+
+	response.JsonSuccess(
+		c,
+		200,
+		gin.H{
+			"user": user,
+		},
+	)
 
 }
