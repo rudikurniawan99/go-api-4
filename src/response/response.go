@@ -1,6 +1,8 @@
 package response
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 type (
 	Success struct {
@@ -44,4 +46,14 @@ func JsonErrorWithMessage(c *gin.Context, code int, msg string, err error) {
 	}
 
 	c.JSON(code, res)
+}
+
+func JsonErrorValidation(c *gin.Context, err interface{}) {
+	res := Failed{
+		Success: false,
+		Message: "validation error",
+		Error:   err,
+	}
+
+	c.JSON(400, res)
 }

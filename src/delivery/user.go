@@ -33,6 +33,12 @@ func (d *userDelivery) RegisterHandler(c *gin.Context) {
 	req := &model.UserRequest{}
 	c.Bind(req)
 
+	if err := helper.UserValidator(req); err != nil {
+
+		response.JsonErrorValidation(c, err.Error())
+		return
+	}
+
 	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), 10)
 
 	user := &model.User{
