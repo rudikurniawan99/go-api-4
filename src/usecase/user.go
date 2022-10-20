@@ -49,7 +49,7 @@ func (u *userUsecase) ComparePassword(password, hash string) error {
 }
 
 func (u *userUsecase) FindById(user *model.User, id int) error {
-	if err := u.r.FIndById(user, id); err != nil {
+	if err := u.r.FindById(user, id); err != nil {
 		return err
 	}
 
