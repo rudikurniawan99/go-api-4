@@ -2,6 +2,7 @@ package response
 
 import (
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type (
@@ -15,6 +16,11 @@ type (
 		Success bool        `json:"success"`
 		Message string      `json:"message"`
 		Error   interface{} `json:"error"`
+	}
+	User struct {
+		gorm.Model
+		Email    string `json:"email"`
+		Password string `json:"_"`
 	}
 )
 
