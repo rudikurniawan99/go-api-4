@@ -12,6 +12,13 @@ type (
 		Data    interface{} `json:"data"`
 	}
 
+	notFound struct {
+		Success bool   `json:"success"`
+		Message string `json:"message"`
+		Data    any    `json:"data"`
+		Error   any    `json:"error,omitempty"`
+	}
+
 	Failed struct {
 		Success bool        `json:"success"`
 		Message string      `json:"message"`
@@ -28,6 +35,16 @@ func JsonSuccess(c *gin.Context, code int, data interface{}) {
 	res := Success{
 		Success: true,
 		Message: "success",
+		Data:    data,
+	}
+
+	c.JSON(code, res)
+}
+
+func JsonSuccessWithMessage(c *gin.Context, code int, message string, data any) {
+	res := Success{
+		Success: true,
+		Message: message,
 		Data:    data,
 	}
 
@@ -67,4 +84,15 @@ func JsonErrorValidation(c *gin.Context, errs []error) {
 	}
 
 	c.JSON(400, res)
+}
+
+func JsonNotFound(c *gin.Context, err any) {
+	res := notFound{
+		Success: false,
+		Message: "not found",
+		Data:    []any{},
+		Error:   err,
+	}
+
+	c.JSON(404, res)
 }
