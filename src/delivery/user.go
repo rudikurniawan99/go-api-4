@@ -27,6 +27,7 @@ func (d *userDelivery) Mount(group *gin.RouterGroup) {
 	group.POST("register", d.RegisterHandler)
 	group.GET("login", d.LoginHandler)
 	group.GET("me", d.getMeHandler)
+	group.GET("users", d.getAllUserHanlder)
 }
 
 func (d *userDelivery) RegisterHandler(c *gin.Context) {
@@ -35,7 +36,7 @@ func (d *userDelivery) RegisterHandler(c *gin.Context) {
 
 	if err := helper.UserValidator(req); err != nil {
 
-		response.JsonErrorValidation(c, err.Error())
+		response.JsonErrorValidation(c, err)
 		return
 	}
 
@@ -44,6 +45,11 @@ func (d *userDelivery) RegisterHandler(c *gin.Context) {
 	user := &model.User{
 		Email:    req.Email,
 		Password: string(hashPassword),
+	}
+
+	if err := d.u.FindByEmail(user, req.Email); err == nil {
+		response.JsonErrorWithMessage(c, 400, "email already exist", err)
+		return
 	}
 
 	if err := d.u.CreateUser(user); err != nil {
@@ -60,6 +66,11 @@ func (d *userDelivery) LoginHandler(c *gin.Context) {
 
 	if err != nil {
 		response.JsonFailed(c, 400, err)
+		return
+	}
+
+	if errs := helper.UserValidator(req); errs != nil {
+		response.JsonErrorValidation(c, errs)
 		return
 	}
 
@@ -126,4 +137,19 @@ func (d *userDelivery) getMeHandler(c *gin.Context) {
 		},
 	)
 
+}
+
+func (d *userDelivery) getAllUserHanlder(c *gin.Context) {
+	users := &[]model.User{}
+
+	if err := d.u.GetAllUser(users); err != nil {
+		response.JsonFailed(c, 400, err)
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "success to get all user data",
+		"data":    users,
+	})
 }

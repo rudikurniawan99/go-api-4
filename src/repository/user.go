@@ -13,6 +13,7 @@ type UserRepository interface {
 	Create(user *model.User) error
 	FindByEmail(user *model.User, email string) error
 	FIndById(user *model.User, id int) error
+	GetAll(users *[]model.User) error
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
@@ -39,5 +40,13 @@ func (r *userRepository) FIndById(user *model.User, id int) error {
 	if err := r.db.First(user, id).Error; err != nil {
 		return err
 	}
+	return nil
+}
+
+func (r *userRepository) GetAll(users *[]model.User) error {
+	if err := r.db.Find(users).Error; err != nil {
+		return err
+	}
+
 	return nil
 }

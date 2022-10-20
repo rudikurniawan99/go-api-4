@@ -48,11 +48,16 @@ func JsonErrorWithMessage(c *gin.Context, code int, msg string, err error) {
 	c.JSON(code, res)
 }
 
-func JsonErrorValidation(c *gin.Context, err interface{}) {
+func JsonErrorValidation(c *gin.Context, errs []error) {
+	arrStringError := []string{}
+	for _, err := range errs {
+		arrStringError = append(arrStringError, err.Error())
+	}
+
 	res := Failed{
 		Success: false,
 		Message: "validation error",
-		Error:   err,
+		Error:   arrStringError,
 	}
 
 	c.JSON(400, res)
