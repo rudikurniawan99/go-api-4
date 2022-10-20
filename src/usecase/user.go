@@ -16,6 +16,7 @@ type UserUsecase interface {
 	FindById(user *model.User, id int) error
 	ComparePassword(password, hash string) error
 	GetAllUser(users *[]model.User) error
+	DeleteById(user *model.User, id int) error
 }
 
 func NewUserUsecase(r repository.UserRepository) UserUsecase {
@@ -58,6 +59,14 @@ func (u *userUsecase) FindById(user *model.User, id int) error {
 
 func (u *userUsecase) GetAllUser(users *[]model.User) error {
 	if err := u.r.GetAll(users); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *userUsecase) DeleteById(user *model.User, id int) error {
+	if err := u.r.DeleteById(user, id); err != nil {
 		return err
 	}
 

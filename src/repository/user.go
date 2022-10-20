@@ -14,6 +14,7 @@ type UserRepository interface {
 	FindByEmail(user *model.User, email string) error
 	FindById(user *model.User, id int) error
 	GetAll(users *[]model.User) error
+	DeleteById(user *model.User, id int) error
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
@@ -45,6 +46,14 @@ func (r *userRepository) FindById(user *model.User, id int) error {
 
 func (r *userRepository) GetAll(users *[]model.User) error {
 	if err := r.db.Find(users).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *userRepository) DeleteById(user *model.User, id int) error {
+	if err := r.db.Unscoped().Delete(user, id).Error; err != nil {
 		return err
 	}
 
